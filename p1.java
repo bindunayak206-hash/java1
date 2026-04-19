@@ -1,20 +1,21 @@
-import java.util.List;
-import java.util.ArrayList;
-public class p1 {
+import java.util.HashMap;
+import java.util.*;
+import java.util.Map.Entry;
 
-	public static void main(String[] args) 
-	{
-		List<String> ls = new ArrayList<>();
-		ls.add("Orange");
-		ls.add("geen");
-		ls.add("pink");
-		ls.add("red");
-		System.out.println(ls);
-		if(ls.contains("red")) {
-			System.out.println("available");
-		}else {
-			System.out.println("available not");
+public class p1
+{
+	public static void main(String[] args) {
+		HashMap< Integer,String> hashMap = new HashMap<>();
+		hashMap.put(1,"Apple");
+		hashMap.put(2,"Strawberry");
+		hashMap.put(3,"Pear");
+		hashMap.put(4,"Cucumber");
+		hashMap.put(5,"Grapes");
+	
+		System.out.println("Iterating over entries:");
+		for (Entry<Integer, String> entry : hashMap.entrySet()) {
+		System.out.println("Key: "+entry.getKey() + " -> Value: " + entry.getValue());
 		}
 	}
-
 }
+		
