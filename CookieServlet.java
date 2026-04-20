@@ -1,91 +1,73 @@
-package com.cookieservlet;
+package com.example;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import java.io.PrintWriter;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import jakarta.servlet.http.*;
 
-//Step 2: Create servlet class and use WebServlet annotation
 @WebServlet("/CookieServlet")
-
 public class CookieServlet extends HttpServlet {
-private static final long serialVersionUID = 1L;
-int count=0; // count for loading times
- // Step 3: Handle GET requests
- public void doGet(HttpServletRequest request, HttpServletResponse response)
-         throws ServletException, IOException {
-	
-     response.setContentType("text/html");
-     PrintWriter out = response.getWriter();
-   
-     // Step 4: Create or retrieve cookies
-     String userName = request.getParameter("userName");
-     if (userName != null && !userName.isEmpty()) {
-         // Create a new cookie
-         Cookie userCookie = new Cookie("user", userName);
-         
-         // Step 5: Set cookie properties
-         userCookie.setMaxAge(30); // Cookie expires in 1 minute  
-         //userCookie.setPath("/");
-         
-         // Step 6: Add cookie to response
-         response.addCookie(userCookie);
-     }
-     
-     // Step 7: Read existing cookies
-     Cookie[] cookies = request.getCookies();
-String existingUser = null;
-     
-     if (cookies != null) {
-         for (Cookie cookie : cookies) {
-             if (cookie.getName().equals("user")) {
-                 existingUser = cookie.getValue();
-                 break;
-             }
-         }
-     }
-     
-     // Step 8: Generate HTML response
-     out.println("<html>");
-     out.println("<head><title>Cookie Example</title></head>");
-     out.println("<body>");
-    
-     if (existingUser != null) {
-    	 count+=1;
-    	out.println("<font color=blue><h2>Welcome back, " + existingUser+"!</h2></font>");
-    	out.println("<font color=magenta><h2>You have visited this page "+count+" times!</h2></font>");
-       }    
-         
-      else {
-         out.println("<h2 style='color:red;'>Welcome Guest! you have been logged out or kindly login first time</h2>");
-         out.println("<form action='CookieServlet' method='post'>");
-         out.println("Enter your name: <input type='text' name='userName'>");
-         out.println("<input type='submit' value='Submit'>");
-         out.println("</form>");
-     }
-     
-     out.println("</body></html>");
- }
- 
- // Step 10: Handle POST requests (for logout)
- public void doPost(HttpServletRequest request, HttpServletResponse response)
-         throws ServletException, IOException {
-     
-     // Delete the cookie by setting its max age to 0
-   //  Cookie cookie = new Cookie("user", "Badhusha");
-  //   cookie.setMaxAge(30);
-	// Correct Logout Logic 
-	 Cookie cookie = new Cookie("user", ""); 
-	 cookie.setMaxAge(0); // This deletes the cookie response.addCookie(cookie);
-	    
-	      response.addCookie(cookie);
-	      
-	      // Redirect back to the servlet
-	      response.sendRedirect("CookieServlet");
-	  }
-	 }
+    private static final long serialVersionUID = 1L;
 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        String name = request.getParameter("username");
+
+        int visitCount = 0;
+        boolean found = false;
+
+        // Get existing cookies
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if (c.getName().equals("visitCount")) {
+                    visitCount = Integer.parseInt(c.getValue());
+                    visitCount++;
+                    found = true;
+                }
+            }
+        }
+
+        if (!found) {
+            visitCount = 1;
+        }
+
+        // Create/Update cookies
+        Cookie nameCookie = new Cookie("username", name);
+        Cookie countCookie = new Cookie("visitCount", String.valueOf(visitCount));
+
+        // Set expiry (in seconds)
+        nameCookie.setMaxAge(60);   // 1 minute
+        countCookie.setMaxAge(60);
+
+        response.addCookie(nameCookie);
+        response.addCookie(countCookie);
+
+        // Output
+        out.println("<html><body>");
+        out.println("<h2>Welcome back " + name + "!</h2>");
+        out.println("<p>You have visited this page " + visitCount + " times.</p>");
+
+        // Display all cookies
+        out.println("<h3>Cookies List:</h3>");
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                out.println("Name: " + c.getName() + " | Value: " + c.getValue() + "<br>");
+            }
+        }
+
+        // Expiry info
+        out.println("<p>Cookies will expire in 60 seconds.</p>");
+
+        // Link to test expiry
+        out.println("<br><a href='index.html'>Go Back</a>");
+
+        out.println("</body></html>");
+    }
+}
