@@ -132,3 +132,40 @@ SwingExample:https://github.com/user-attachments/assets/f9cde709-7657-477c-b68f-
 
 
 
+
+
+
+
+
+
+Hellow world Second:https://github.com/user-attachments/assets/e13c71a4-6eb9-4c2c-a978-43300f6da1d0
+
+
+
+
+
+FactorialServelet:https://github.com/user-attachments/assets/3b859439-9282-4075-b2cd-16c7c06cbc65
+
+
+
+
+Prime
+
+
+
+CookieServlet:https://github.com/user-attachments/assets/b0466bd0-24c2-4530-951f-93e82649a4c2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
